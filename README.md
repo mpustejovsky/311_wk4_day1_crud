@@ -40,6 +40,10 @@ We are going to run a couple INSERT/UPDATE/DELETE statements and put our SQL STA
 
 Did the above statement fail? Why? What does the error response say?
 
+Error shown below.
+"15:05:26	delete from   users where  id=114	Error Code: 1451. Cannot delete or update a parent row: a foreign key constraint fails (`admin`.`usersAddress`, CONSTRAINT `usersAddress_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`))	0.749 sec"
+
+
 We cannot delete this user yet because other tables (usersContact, usersAddress) are children of this table. Remember when we talked about foreign keys in the last lesson? That means we need to delete the appropriate information from those tables before we can delete the user. 
 
 This should make sense because we can't have user addresses that don't correspond to any user (since the user would have been deleted).
@@ -51,18 +55,48 @@ Let's delete the appropriate information from `usersContact`, `usersAddress` and
 
 1. INSERT two users:
 
+      insert into users
+        (first_name, last_name)
+      values
+        ('test', 'user'),
+        ('test2', 'user')
+  
+
 
 2. UPDATE all Ohio addresses to "REDACTED":
 
+      update
+      usersAddress
+      set
+      address='REDACTED'
+      where
+      state='OH'
+
+
 3. All three DELETES
 
-* DELETE from usersContact
+Did the above statement fail? Why? What does the error response say?
 
+Error shown below.
+"15:05:26	delete from   users where  id=114	Error Code: 1451. Cannot delete or update a parent row: a foreign key constraint fails (`admin`.`usersAddress`, CONSTRAINT `usersAddress_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`))	0.749 sec"
+
+* DELETE from usersContact
+    delete from 
+      usersContact
+    where 
+      user_id=114
 
 * DELETE from usersAddress
-
+    delete from 
+      usersAddress
+    where 
+      user_id=114
 
 * DELETE from users
+  delete from 
+    users
+  where 
+    id=114
 
 
 ## Summary
